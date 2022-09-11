@@ -1,6 +1,8 @@
 # The following code is just to setup the exercise. You do not need to
 # understand but can jump to the game below.
 
+from guessing_algorithms import GuessingAlgorithm, GuessingBottomUp, GuessingMiddleUpOrDown, GuessingUpBottom, ValueNotInRangeError
+
 
 def input_selection(prompt: str, options: list[str]) -> str:
     """Get user input, restrict it to fixed options."""
@@ -17,19 +19,47 @@ def input_selection(prompt: str, options: list[str]) -> str:
         ))
 
 
-print("Please thing of a number from 1 to 20, both included.")
-print("Let me know how good my guess is.\n")
+def run_interactive_prompt(algorithm: GuessingAlgorithm, min_int: int, max_int: int):
+    # Print info
+    print(
+        f"Please thing of a number from {min_int} to {max_int}, both included.")
+    print("Let me know how good my guess is.\n")
+    guesser = algorithm(min_int, max_int)
+    while True:
+        # First, get next guess value
+        try:
+            guess = guesser.guess()
+        except ValueNotInRangeError:
+            print('No correct value in the indicated range')
+            break
+        # Then, check it
+        result = input_selection(
+            f"I'm guessing {guess}\nHow is my guess?",
+            ["low", "hit", "high"]
+        )
+        if result == "hit":
+            print("Wuhuu!")
+            break
+        # Try to get feedback (if GuessingMiddleUpOrDown algorithm)
+        try:
+            guesser.get_feedback(result, guess)
+        except ValueNotInRangeError:
+            print('No correct value in the indicated range')
+            break
+        except:
+            continue
 
-# Here, we implement the computer's strategy for guessing
-# the number you are thinking of. Don't lie to the
-# computer. It won't punish you, but it will frown upon it.
-for guess in range(1, 21):
-    result = input_selection(
-        "I'm guessing {}\nHow is my guess?".format(guess),
-        ["low", "hit", "high"]
+
+def main():
+    user_algorithm = input_selection(
+        "Now, you should select one of the available algorithms",
+        ['BottomUp', 'pBottom', 'MiddleUpOrDown']
     )
-    if result == "hit":
-        print("Wuhuu!")
-        break
+    match user_algorithm:
+        case "BottomUp": run_interactive_prompt(GuessingBottomUp, 1, 20)
+        case "UpBottom": run_interactive_prompt(GuessingUpBottom, 1, 20)
+        case "MiddleUpOrDown": run_interactive_prompt(GuessingMiddleUpOrDown, 1, 20)
 
-    print("I must have been too low, right?", result)
+
+if __name__ == "__main__":
+    main()
