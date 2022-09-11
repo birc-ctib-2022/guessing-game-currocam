@@ -1,7 +1,7 @@
 # The following code is just to setup the exercise. You do not need to
 # understand but can jump to the game below.
 
-from guessing_algorithms import GuessingAlgorithm, GuessingBottomUp, GuessingMiddleUpOrDown, GuessingUpBottom, ValueNotInRangeError
+from guessing_algorithms import GuessingAlgorithm, GuessingBottomUp, GuessingMiddleUpOrDown, GuessingRandom, GuessingUpBottom, ValueNotInRangeError
 
 
 def input_selection(prompt: str, options: list[str]) -> str:
@@ -53,12 +53,13 @@ def run_interactive_prompt(algorithm: GuessingAlgorithm, min_int: int, max_int: 
 def main():
     user_algorithm = input_selection(
         "Now, you should select one of the available algorithms",
-        ['BottomUp', 'pBottom', 'MiddleUpOrDown']
+        ['BottomUp', 'pBottom', 'MiddleUpOrDown', 'Random']
     )
     match user_algorithm:
         case "BottomUp": run_interactive_prompt(GuessingBottomUp, 1, 20)
         case "UpBottom": run_interactive_prompt(GuessingUpBottom, 1, 20)
         case "MiddleUpOrDown": run_interactive_prompt(GuessingMiddleUpOrDown, 1, 20)
+        case "Random": run_interactive_prompt(GuessingRandom, 1, 20)
 
 
 if __name__ == "__main__":
